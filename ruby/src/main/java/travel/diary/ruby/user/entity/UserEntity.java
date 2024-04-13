@@ -15,6 +15,9 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(nullable = false, name = "platform")
     @Enumerated(EnumType.STRING)
     private PlatformType platform;

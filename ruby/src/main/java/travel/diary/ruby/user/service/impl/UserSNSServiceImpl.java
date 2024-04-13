@@ -28,24 +28,73 @@ public class UserSNSServiceImpl implements UserSNSService {
     }
 
     @Override
-    public String Signup(String emailAddress, String user_type, String platform) throws JsonProcessingException {
+    public Object Signup(String emailAddress, String password, String user_type, String platform) throws JsonProcessingException {
         UserEntity newUser = new UserEntity();
-
         Map<String, String> map = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
 
         //이메일 빈값임
         if (emailAddress == null) {
-            map.put("res", "50");
+            map.put("res", "0");
             map.put("message", "email");
-            return objectMapper.writeValueAsString(map);
+            return map;
         }
 
-        newUser.setEmail(emailAddress);
-        newUser.setUser_type(UserType.valueOf(user_type));
-        newUser.setPlatform(PlatformType.valueOf(platform));
-        userRepository.save(newUser);
+        if ( "NORMAL".equalsIgnoreCase(user_type)) {
+            return normalSignup(emailAddress, password, platform);
+        }
 
-        return null;
+        if (userRepository.findByEmail(emailAddress) == null) {
+            newUser.setEmail(emailAddress);
+            newUser.setUser_type(UserType.valueOf(user_type));
+            newUser.setPlatform(PlatformType.valueOf(platform));
+            userRepository.save(newUser);
+            map.put("res", "200");
+            map.put("message", "signup");
+            map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
+            log.info("signup - " + user_type + " - " + platform + emailAddress);
+            log.info(objectMapper.writeValueAsString(map));
+            return map;
+        } else {
+            map.put("res", "200");
+            map.put("message", "login");
+            map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
+            map.put("user_entity", String.valueOf(userRepository.findByEmail(emailAddress)));
+            log.info("Login - " + user_type + " - " + platform + emailAddress);
+            log.info(objectMapper.writeValueAsString(map));
+
+            return objectMapper.writeValueAsString(map);
+        }
+    }
+
+    public Object normalSignup(String emailAddress, String password, String platform) throws JsonProcessingException {
+        UserEntity newUser = new UserEntity();
+        Map<String, String> map = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        if (userRepository.findByEmail(emailAddress) == null) {
+            newUser.setEmail(emailAddress);
+            newUser.setUser_type(UserType.valueOf("NORMAL"));
+            newUser.setPlatform(PlatformType.valueOf(platform));
+            userRepository.save(newUser);
+            map.put("res", "200");
+            map.put("message", "signup");
+            map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
+            log.info("signup - NORMAL" + " - " + platform + emailAddress);
+            log.info(objectMapper.writeValueAsString(map));
+            return map;
+        } else {
+            if (password.equals(userRepository.findByEmail(emailAddress).getPassword())) {
+                map.put("res", "0");
+                map.put("message", "password");
+            }
+            map.put("res", "200");
+            map.put("user_entity", String.valueOf(userRepository.findByEmail(emailAddress)));
+            map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
+            log.info("Login - NORMAL" + " - " + platform + emailAddress);
+            log.info(objectMapper.writeValueAsString(map));
+
+            return objectMapper.writeValueAsString(map);
+        }
     }
 }

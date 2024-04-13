@@ -17,7 +17,7 @@ public class UserController {
     }
 
     @RequestMapping("/{userType}/{platform}")
-    public ResponseEntity<?> authLogin(@RequestParam String emailAddress, @PathVariable String userType, @PathVariable String platform) throws JsonProcessingException {
-        return ResponseEntity.ok(userSNSService.Signup(emailAddress, userType, platform));
+    public ResponseEntity<?> authLogin(@RequestParam String emailAddress, String password, @PathVariable String userType, @PathVariable String platform) throws JsonProcessingException {
+        return ResponseEntity.ok(userSNSService.Signup(emailAddress, password, userType, platform));
     }
 }
