@@ -12,6 +12,7 @@ import travel.diary.ruby.user.entity.UserType;
 import travel.diary.ruby.user.repository.UserRepository;
 import travel.diary.ruby.user.service.UserSNSService;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,6 @@ public class UserSNSServiceImpl implements UserSNSService {
 
     private final UserRepository userRepository;
     private final Logger log = LoggerFactory.getLogger(getClass());
-
 
     @Autowired
     private UserSNSServiceImpl(UserRepository userRepository) {
