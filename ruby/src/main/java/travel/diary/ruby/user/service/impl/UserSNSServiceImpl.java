@@ -46,8 +46,9 @@ public class UserSNSServiceImpl implements UserSNSService {
 
         if (userRepository.findByEmail(emailAddress) == null) {
             newUser.setEmail(emailAddress);
-            newUser.setUser_type(UserType.valueOf(user_type));
-            newUser.setPlatform(PlatformType.valueOf(platform));
+            newUser.setUser_type(UserType.valueOf(user_type.toUpperCase()));
+            newUser.setPlatform(PlatformType.valueOf(platform.toUpperCase()));
+            newUser.setPassword("__empty__");
             userRepository.save(newUser);
             map.put("res", "200");
             map.put("message", "signup");
@@ -71,7 +72,6 @@ public class UserSNSServiceImpl implements UserSNSService {
         UserEntity newUser = new UserEntity();
         Map<String, String> map = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
-
         if (userRepository.findByEmail(emailAddress) == null) {
             newUser.setEmail(emailAddress);
             newUser.setUser_type(UserType.valueOf("NORMAL"));
@@ -84,6 +84,15 @@ public class UserSNSServiceImpl implements UserSNSService {
             log.info(objectMapper.writeValueAsString(map));
             return map;
         } else {
+            //이메일로 유저 뽑아서 SNS로그인 했으면 알려주기
+            if ( !"NORMAL".equalsIgnoreCase(userRepository.findByEmail(emailAddress).getUser_type().toString())) {
+                map.put("res", "0");
+                map.put("message", "already registered with SNS");
+                map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
+                log.info(objectMapper.writeValueAsString(map));
+                return map;
+            }
+
             if (password.equals(userRepository.findByEmail(emailAddress).getPassword())) {
                 map.put("res", "0");
                 map.put("message", "password");
