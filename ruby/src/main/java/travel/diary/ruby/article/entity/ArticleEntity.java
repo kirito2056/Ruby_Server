@@ -6,11 +6,15 @@ import java.sql.Timestamp;
 
 @Data
 @Table(name = "diary")
+@Entity
 public class ArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
-    private Long ArticleId;
+    private Long articleId;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "title")
     private String title;
@@ -20,4 +24,17 @@ public class ArticleEntity {
 
     @Column(name = "written_date")
     private Timestamp writtenDate;
+
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private ArticleCategory category;
+
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
+
+    @Column(name = "city")
+    private String city;
 }
