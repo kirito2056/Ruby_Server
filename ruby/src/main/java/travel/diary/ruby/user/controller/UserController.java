@@ -10,14 +10,13 @@ import travel.diary.ruby.user.service.UserSNSService;
 @RequestMapping("/auth")
 public class UserController {
     private final UserSNSService userSNSService;
-
     @Autowired
     public UserController(UserSNSService userSNSService) {
         this.userSNSService = userSNSService;
     }
 
     @RequestMapping("/{userType}/{platform}")
-    public ResponseEntity<?> authLogin(@RequestParam String emailAddress, String password, @PathVariable String userType, @PathVariable String platform) throws JsonProcessingException {
+    public ResponseEntity<?> authLogin(@RequestParam String emailAddress, @RequestParam String password, @PathVariable String userType, @PathVariable String platform) throws JsonProcessingException {
         return ResponseEntity.ok(userSNSService.Signup(emailAddress, password, userType, platform));
     }
 }
