@@ -3,7 +3,6 @@ package travel.diary.ruby.article.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import travel.diary.ruby.article.entity.ArticleEntity;
 import travel.diary.ruby.article.entity.ArticleRequestDTO;
 import travel.diary.ruby.article.service.ArticleService;
 
@@ -21,7 +20,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.saveArticle(newArticle, user_id));
     }
 
-    @GetMapping("/{articleId}")
+    @DeleteMapping("/{articleId}")
     public ResponseEntity<?> getArticle(@PathVariable String articleId) throws JsonProcessingException {
         return ResponseEntity.ok(articleService.getArticle(articleId));
     }
