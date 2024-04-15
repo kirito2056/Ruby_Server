@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
+import travel.diary.ruby.article.entity.ArticleCategory;
 import travel.diary.ruby.article.entity.ArticleEntity;
 import travel.diary.ruby.article.entity.ArticleRequestDTO;
 import travel.diary.ruby.article.repository.ArticleRepository;
 import travel.diary.ruby.article.service.ArticleService;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,11 +30,13 @@ public class ArticleServiceImpl implements ArticleService {
         Map<String, Object> map = new HashMap<>();
         ArticleEntity articleEntity = new ArticleEntity();
 
-        articleEntity.setLon(newArticle.getLon());
-        articleEntity.setLat(newArticle.getLat());
+        articleEntity.setUserId(Long.parseLong(user_id));
         articleEntity.setTitle(newArticle.getTitle());
         articleEntity.setContent(newArticle.getContent());
-        articleEntity.setUserId(Long.parseLong(user_id));
+        articleEntity.setWrittenDate(Timestamp.valueOf(LocalDateTime.now()));
+        articleEntity.setLon(newArticle.getLon());
+        articleEntity.setLat(newArticle.getLat());
+        articleEntity.setCategory(ArticleCategory.valueOf(newArticle.getCategory()));
 
         map.put("res", "200");
         map.put("message", "save");
@@ -50,5 +55,21 @@ public class ArticleServiceImpl implements ArticleService {
         map.put("article_id", gotArticle.getArticleId());
         map.put("articleEntity", gotArticle);
         return objectMapper.writeValueAsString(map);
+    }
+
+    @Override
+    public Object deleteArticle(String article_id) {
+        Map<String, Object> map = new HashMap<>();
+        if (articleRepository.findByArticleId(article_id) == null) {
+            map.put("res", "404");
+            map.put("message", "article is not exist");
+            return map;
+        }
+        else {
+            articleRepository.delete(articleRepository.findByArticleId(article_id));
+            map.put("res", "200");
+            map.put("message", "delete complete");
+            return map;
+        }
     }
 }

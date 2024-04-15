@@ -7,4 +7,6 @@ public interface ArticleService {
     Object saveArticle(ArticleRequestDTO newArticle, String user_id);
 
     Object getArticle(String article_id) throws JsonProcessingException;
+
+    Object deleteArticle(String article_id);
 }
