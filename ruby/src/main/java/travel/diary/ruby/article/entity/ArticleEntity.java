@@ -25,6 +25,7 @@ public class ArticleEntity {
     @Column(name = "written_date")
     private Timestamp writtenDate;
 
+    //front에서 선택으로 보내주자
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
     private ArticleCategory category;

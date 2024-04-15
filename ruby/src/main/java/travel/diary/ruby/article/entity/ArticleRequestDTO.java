@@ -8,4 +8,5 @@ public class ArticleRequestDTO {
     private String content;
     private Double lat;
     private Double lon;
+    private String category;
 }
