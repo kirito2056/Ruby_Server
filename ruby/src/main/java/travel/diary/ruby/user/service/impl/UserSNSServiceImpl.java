@@ -11,8 +11,6 @@ import travel.diary.ruby.user.entity.UserEntity;
 import travel.diary.ruby.user.entity.UserType;
 import travel.diary.ruby.user.repository.UserRepository;
 import travel.diary.ruby.user.service.UserSNSService;
-
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +51,7 @@ public class UserSNSServiceImpl implements UserSNSService {
             map.put("res", "200");
             map.put("message", "signup");
             map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
-            log.info("signup - " + user_type + " - " + platform + emailAddress);
+            log.info("signup - " + user_type + " - " + platform + " - " + emailAddress);
             log.info(objectMapper.writeValueAsString(map));
             return map;
         } else {
@@ -61,7 +59,7 @@ public class UserSNSServiceImpl implements UserSNSService {
             map.put("message", "login");
             map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
             map.put("user_entity", String.valueOf(userRepository.findByEmail(emailAddress)));
-            log.info("Login - " + user_type + " - " + platform + emailAddress);
+            log.info("Login - NORMAL" + " - " + platform + " - " + emailAddress);
             log.info(objectMapper.writeValueAsString(map));
 
             return objectMapper.writeValueAsString(map);
@@ -75,12 +73,20 @@ public class UserSNSServiceImpl implements UserSNSService {
         if (userRepository.findByEmail(emailAddress) == null) {
             newUser.setEmail(emailAddress);
             newUser.setUser_type(UserType.valueOf("NORMAL"));
-            newUser.setPlatform(PlatformType.valueOf(platform));
+            newUser.setPlatform(PlatformType.valueOf(platform.toUpperCase()));
+
+            //password 암호화 처리 구현하기--------------------
+            if (password.equals("empty")) newUser.setPassword("__empty__");
+            else newUser.setPassword(password);
+
+            //password 암호화 처리 구현하기--------------------
+
+
             userRepository.save(newUser);
             map.put("res", "200");
             map.put("message", "signup");
             map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
-            log.info("signup - NORMAL" + " - " + platform + emailAddress);
+            log.info("signup - NORMAL" + " - " + platform + " - " + emailAddress);
             log.info(objectMapper.writeValueAsString(map));
             return map;
         } else {
@@ -100,7 +106,7 @@ public class UserSNSServiceImpl implements UserSNSService {
             map.put("res", "200");
             map.put("user_entity", String.valueOf(userRepository.findByEmail(emailAddress)));
             map.put("user_id", userRepository.findByEmail(emailAddress).getUserId().toString());
-            log.info("Login - NORMAL" + " - " + platform + emailAddress);
+            log.info("Login - NORMAL" + " - " + platform + " - " + emailAddress);
             log.info(objectMapper.writeValueAsString(map));
 
             return objectMapper.writeValueAsString(map);
