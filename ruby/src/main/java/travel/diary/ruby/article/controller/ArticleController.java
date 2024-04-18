@@ -30,7 +30,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/delete/{articleId}")
-    public ResponseEntity<?> getArticle(@PathVariable String articleId) throws JsonProcessingException {
-        return ResponseEntity.ok(articleService.getArticle(articleId));
+    public ResponseEntity<?> deleteArticle(@PathVariable String articleId)  {
+        return ResponseEntity.ok(articleService.deleteArticle(articleId));
     }
+
+
 }
