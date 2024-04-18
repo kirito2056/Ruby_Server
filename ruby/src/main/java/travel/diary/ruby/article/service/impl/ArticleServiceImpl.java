@@ -36,7 +36,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleEntity.setWrittenDate(Timestamp.valueOf(LocalDateTime.now()));
         articleEntity.setLon(newArticle.getLon());
         articleEntity.setLat(newArticle.getLat());
-        articleEntity.setCategory(ArticleCategory.valueOf(newArticle.getCategory()));
+        articleEntity.setCategory(ArticleCategory.valueOf(newArticle.getCategory().toUpperCase()));
 
         map.put("res", "200");
         map.put("message", "save");
@@ -63,13 +63,32 @@ public class ArticleServiceImpl implements ArticleService {
         if (articleRepository.findByArticleId(article_id) == null) {
             map.put("res", "404");
             map.put("message", "article is not exist");
-            return map;
         }
         else {
             articleRepository.delete(articleRepository.findByArticleId(article_id));
             map.put("res", "200");
             map.put("message", "delete complete");
-            return map;
         }
+        return map;
+    }
+
+    @Override
+    public Object updateArticle(ArticleRequestDTO requestDTO, String postId) {
+        Map<String, Object> map = new HashMap<>();
+        if ( articleRepository.findByArticleId(postId) == null) {
+            map.put("res", "404");
+            map.put("message", "article is not exist");
+        } else {
+            ArticleEntity articleEntity = articleRepository.findByArticleId(postId);
+            articleEntity.setTitle(requestDTO.getTitle());
+            articleEntity.setContent(requestDTO.getContent());
+            articleEntity.setLat(requestDTO.getLat());
+            articleEntity.setLon(requestDTO.getLon());
+            articleRepository.save(articleEntity);
+
+            map.put("res", "200");
+            map.put("message", "update complete");
+        }
+        return map;
     }
 }
