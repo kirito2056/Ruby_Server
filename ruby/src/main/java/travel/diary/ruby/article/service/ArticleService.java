@@ -9,4 +9,6 @@ public interface ArticleService {
     Object getArticle(String article_id) throws JsonProcessingException;
 
     Object deleteArticle(String article_id);
+
+    Object updateArticle(ArticleRequestDTO requestDTO, String postId);
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import travel.diary.ruby.user.service.UserSNSService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 public class UserController {
     private final UserSNSService userSNSService;
     @Autowired
